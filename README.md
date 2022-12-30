@@ -2,9 +2,9 @@
 
 # Research Organization Registry (ROR) API
 
-The ROR API allows retrieving, searching and filtering the organizations indexed in ROR. The results are returned in JSON. See https://ror.readme.io for documentation.
+The ROR API allows retrieving, searching, and filtering the organizations indexed in ROR. The results are returned in JSON. See https://ror.readme.io for documentation.
 
-Commands for indexing ROR data, generating new ROR IDs and other internal operations are also included in this API.
+Commands for indexing ROR data, generating new ROR IDs, and other internal operations are also included in this API.
 
 # Development
 
@@ -26,20 +26,23 @@ Commands for indexing ROR data, generating new ROR IDs and other internal operat
       ROUTE_USER=[USER]
       TOKEN=[TOKEN]
 
-Replace values in [] with valid credential values. GITHUB_TOKEN is needed in order to index an existing data dump locally. ROUTE_USER and TOKEN are only needed in order to use generate-id functionality locally. AWS_* and DATA_STORE are only needed in order to use incremental indexing from S3 functionality locally.
+ROR staff should replace values in [] with valid credential values, but external users who only wish to run the API locally do not need to add these values as they are used for management functionality only.
+
+- Optionally, uncomment [line 24 in docker-compose.yml](https://github.com/ror-community/ror-api/blob/master/docker-compose.yml#L24) in order to pull the rorapi image from Dockerhub rather than creating it from local code  
 
 ## Start ror-api locally
 1. Start Docker Desktop
 2. In the project directory, run docker-compose to start all services:
+
         docker-compose up -d
 
-3. Index the latest ROR dataset from https://github.com/ror-community/ror-data
+3. Download the latest ROR dataset from https://github.com/ror-community/ror-data, unzip the file, and add the unzipped JSON file to the root directory of your local `ror-api` repository. Then run the following command to index the data, making sure to use the filename of the dataset without the .json extension. Example: 
 
-        docker-compose exec web python manage.py setup v1.0-2022-03-17-ror-data
+        docker-compose exec web python manage.py setup v1.16-2022-12-06-ror-data
 
 *Note: You must specify a dataset that exists in [ror-data](https://github.com/ror-community/ror-data)*
 
-4. <http://localhost:9292/organizations>.
+4. See the ROR API in your browser at <http://localhost:9292/organizations>.
 
 5. Optionally, start other services, such as [ror-app](https://github.com/ror-community/ror-app) (the search UI) or [generate-id](https://github.com/ror-community/generate-id) (middleware microservice)
 
